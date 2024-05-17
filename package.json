@@ -1,0 +1,22 @@
+{
+  "name": "ghminer",
+  "version": "0.0.0",
+  "description": "Command-line GitHub repository miner that aggregates dataset for your researches",
+  "main": "src",
+  "keywords": [
+    "github-repositories",
+    "javascript",
+    "research-dataset"
+  ],
+  "author": "h1alexbel",
+  "license": "MIT",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "fs": "^0.0.1-security",
+    "graphql-request": "^7.0.1",
+    "minimist": "^1.2.8"
+  }
+}

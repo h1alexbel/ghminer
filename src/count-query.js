@@ -21,28 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const query = `query ($completeSearchQuery: String!) {
+  search(query: $completeSearchQuery, type: REPOSITORY, first: 1) {
+    repositoryCount
+  }
+}`;
 
-module.exports = function(grunt) {
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    clean: ['temp'],
-    mochacli: {
-      test: {
-        options: {
-          timeout: '1200000',
-          files: ['test/**/*.js'],
-        },
-      },
-    },
-    eslint: {
-      options: {
-        overrideConfigFile: '.eslintrc.json',
-      },
-      target: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
-    },
-  });
-  grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-mocha-cli');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.registerTask('default', ['mochacli', 'eslint']);
-};
+module.exports = query;

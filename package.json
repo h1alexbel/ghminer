@@ -11,12 +11,21 @@
   "author": "h1alexbel",
   "license": "MIT",
   "scripts": {
-    "test": "npm run test"
+    "test": "grunt --no-color"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",
     "fs": "^0.0.1-security",
     "graphql-request": "^7.0.1",
     "minimist": "^1.2.8"
+  },
+  "devDependencies": {
+    "mocha": "^10.3.0",
+    "grunt": "^1.6.1",
+    "eslint": "8.45.0",
+    "eslint-config-google": "0.14.0",
+    "grunt-contrib-clean": "2.0.1",
+    "grunt-eslint": "24.3.0",
+    "grunt-mocha-cli": "^4.0.0"
   }
 }

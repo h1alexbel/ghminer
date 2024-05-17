@@ -65,6 +65,7 @@ npm test
 You will need [Node 20+] installed.
 
 [ksegla/GitHubMiner]: https://github.com/ksegla/GitHubMiner
+[GitHub Search API]: https://api.github.com
 [GitHub GraphQL API]: https://api.github.com/graphql
 [GitHub PAts]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [limitation]: https://stackoverflow.com/questions/37602893/github-search-limit-results

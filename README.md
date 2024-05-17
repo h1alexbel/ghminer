@@ -4,11 +4,11 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/h1alexbel/samples-filter)](http://www.rultor.com/p/h1alexbel/samples-filter)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
-//test.yml
+[![test](https://github.com/h1alexbel/ghminer/actions/workflows/test.yml/badge.svg)](https://github.com/h1alexbel/ghminer/actions/workflows/test.yml)
 ![NPM Version](https://img.shields.io/npm/v/ghminer)
-[![PDD status](http://www.0pdd.com/svg?name=h1alexbel/samples-filter)](http://www.0pdd.com/p?name=h1alexbel/samples-filter)
-[![Hits-of-Code](https://hitsofcode.com/github/h1alexbel/samples-filter)](https://hitsofcode.com/view/github/h1alexbel/samples-filter)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/h1alexbel/samples-filter/blob/master/LICENSE.txt)
+[![PDD status](http://www.0pdd.com/svg?name=h1alexbel/ghminer)](http://www.0pdd.com/p?name=h1alexbel/ghminer)
+[![Hits-of-Code](https://hitsofcode.com/github/h1alexbel/ghminer)](https://hitsofcode.com/view/github/h1alexbel/ghminer)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/h1alexbel/ghminer/blob/master/LICENSE.txt)
 
 ghminer is a command-line dataset miner, that aggregates set of public GitHub
 repositories from [GitHub GraphQL API] and flushes the result into CSV and JSON

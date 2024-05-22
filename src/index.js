@@ -39,6 +39,8 @@ const searchQuery = argv.query || '';
 const startDate = argv.start || '2008-01-01';
 const endDate = argv.end || now;
 const dateType = argv.date || 'created';
+const print = argv.json || false;
+
 let tokens;
 if (argv.tokens) {
   if ('string' === typeof argv.tokens) {
@@ -251,8 +253,10 @@ function writeFiles(json) {
     };
     return data;
   });
-  toJson(fileName, formattedResults);
   toCsv(fileName, formattedResults);
+  if (print) {
+    toJson(fileName, formattedResults);
+  }
 }
 
 const countQuery = `query ($completeSearchQuery: String!) {

@@ -49,8 +49,10 @@ choose from `craeted`, `updated` and `pushed`, the default one is `created`.
 With `--batchsize 10` you can provide a batch-size value in the range from
 10..100. The default value is `10`.
 
-Also, with `--filename` you can provide the name of the file for the output CSV
-and JSON files. The default one is `result`.
+Also, with `--filename` you can provide the name of the file for the output
+repos (CSV and JSON files). The default one is `result`. By default, it would
+create `.csv` file only. In order to create `.json` too, just pass `--json`
+option.
 
 ## How to contribute
 

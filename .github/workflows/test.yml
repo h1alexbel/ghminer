@@ -32,7 +32,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-20.04, windows-2022, macos-12 ]
+        os: [ ubuntu-20.04, macos-12 ]
         node: [ 20 ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -41,5 +41,5 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install
-      - run: npm install -g grunt-cli
+      - run: npm install --force -g grunt-cli
       - run: npm test

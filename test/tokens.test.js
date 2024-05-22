@@ -21,11 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const assert = require('assert');
 const tokens = require('../src/tokens.js');
 
 describe('Test case for tokens.js', function() {
   it('fetches one token from file', function() {
-    const fetched = tokens("test/resources/one.txt");
-    console.log(fetched)
+    const fetched = tokens("test/resources/one");
+    const expected = 'justOneToken';
+    assert.equal(
+      fetched,
+      expected,
+      `fetched tokens ${fetched} don't match with expected ${expected}`
+    )
   });
 });

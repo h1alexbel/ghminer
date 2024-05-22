@@ -26,7 +26,7 @@ const tokens = require('../src/tokens.js');
 
 describe('Test case for tokens.js', function() {
   it('fetches one token from file', function() {
-    const fetched = tokens('test/resources/one');
+    const fetched = tokens('test/resources/one.txt');
     const expected = 'justOneToken';
     assert.equal(
       fetched,

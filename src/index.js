@@ -201,7 +201,6 @@ async function fetchAllResults() {
 //  case `result` should be bindable only in that `.yml` config.
 function writeFiles(json) {
   const formattedResults = json.map((result) => {
-    // Modify according to the desired format and extraction fields
     const data = {
       repo: result.nameWithOwner,
       branch: result.defaultBranchRef.name,

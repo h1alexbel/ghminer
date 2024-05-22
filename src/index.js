@@ -23,16 +23,12 @@
  */
 const minimist = require('minimist');
 const toJson = require('./to-json.js');
+const toCsv = require('./to-csv.js');
 const rq = require('./ratelimit-query.js');
-
-/**
- * Dynamic import for GraphQLClient, since 'graphql-request' does not support cjs.
- * @returns {Promise<*>} GraphQLClient API client
- */
-async function api() {
-  const { GraphQLClient } = await import('graphql-request');
-  return GraphQLClient;
-}
+const api = require('./api.js');
+const path = require('path');
+const filed = require('./tokens.js');
+const query = require('./graph.js');
 
 const argv = minimist(process.argv.slice(2));
 const fileName = argv.filename || 'results';
@@ -41,11 +37,17 @@ const searchQuery = argv.query || '';
 const startDate = argv.start || '2008-01-01';
 const endDate = argv.end || now;
 const dateType = argv.date || 'created';
-// @todo #1:35min Add support for --tokens to pass file with tokens.
-//  We should add support for --tokens so, we users of the CLI will pass the
-//  file (filename) or an array that contains a few tokens. Don't forget to
-//  remove this puzzle.
-const tokens = argv.tokens || 'tokens';
+let tokens;
+if (argv.tokens) {
+  if ('string' === typeof argv.tokens) {
+    tokens = filed(path.resolve(argv.tokens));
+  } else {
+    console.error('Tokens must be a string (file path).');
+    process.exit(1);
+  }
+} else {
+  tokens = [];
+}
 
 /**
  * The maximum number of results GitHub can provide from a query.
@@ -54,9 +56,12 @@ const tokens = argv.tokens || 'tokens';
  */
 const MAXRESULTS = 1000;
 const TIMEOUT = 0;
-
 let tindex = 0;
 
+/**
+ * Use next GitHub token from inputs.
+ * @returns {String} next GitHub token
+ */
 function nextToken() {
   const token = tokens[tindex];
   tindex = (tindex + 1) % tokens.length;
@@ -67,10 +72,13 @@ function nextToken() {
 //  We should decompose this large function into more manageable components in
 //  order to maintain it in the future. Let's create a few unit test as well.
 //  Don't forget to remove this puzzle.
-async function fetchResultsBatch(searchQuery, currentDate, cursor = null, results = []) {
+// async function fetchResultsBatch(
+async function fetchResultsBatch(
+  searchQuery, date, cursor = null, results = []
+) {
   try {
     const GraphQLClient = await api();
-    const client = new GraphQLClient('https://api.github.com/graphql', {
+    const client = new GraphQLClient("https://api.github.com/graphql", {
       headers: {
         Authorization: `Bearer ${nextToken()}`
       }
@@ -80,22 +88,21 @@ async function fetchResultsBatch(searchQuery, currentDate, cursor = null, result
       first: batchsize,
       after: cursor
     });
-    const {nodes, pageInfo} = data.search;
+    const { nodes, pageInfo } = data.search;
     results.push(...nodes);
-    if (currentDate !== undefined) {
-      console.log(`\nExtracted ${results.length} results for ${currentDate}...\n\n`);
+    if (date !== undefined) {
+      console.log(`\nExtracted ${results.length} results for ${date}...\n\n`);
     } else {
       console.log(`\nExtracted ${results.length} results so far...`);
     }
     const rateLimitData = await client.request(rq);
     const rateLimit = rateLimitData.rateLimit;
-    console.log('Rate Limit:', rateLimit);
-    console.log('hasNextPage:', pageInfo.hasNextPage);
-    console.log('endCursor:', pageInfo.endCursor);
+    console.log("Rate Limit:", rateLimit);
+    console.log("hasNextPage:", pageInfo.hasNextPage);
+    console.log("endCursor:", pageInfo.endCursor);
     if (pageInfo.hasNextPage) {
-      // Delay between batches to avoid rate limits
-      await new Promise((resolve) => setTimeout(resolve, TIMEOUT)); // Adjust the delay time as needed
-      return await fetchResultsBatch(searchQuery, currentDate, pageInfo.endCursor, results);
+      await new Promise((resolve) => setTimeout(resolve, REQUEST_TIMEOUT));
+      return await fetchResultsBatch(searchQuery, date, pageInfo.endCursor, results);
     } else {
       return results;
     }
@@ -109,8 +116,8 @@ async function fetchResultsBatch(searchQuery, currentDate, cursor = null, result
 //  Let's try to use open repositories without PAT passing. Besides the
 //  test case, let's move this function into `ranged.js`. Don't forget to
 //  remove this puzzle.
-async function resultsInDateRange(completeSearchQuery) {
-  console.log('Checking if date range should be split: ' + completeSearchQuery);
+async function resultsInDateRange(search) {
+  console.log('Checking if date range should be split: ' + search);
   try {
     const GraphQLClient = await api();
     const client = new GraphQLClient('https://api.github.com/graphql', {
@@ -118,15 +125,14 @@ async function resultsInDateRange(completeSearchQuery) {
         Authorization: `Bearer ${nextToken()}`
       }
     });
-    let data = await client.request(countQuery, {completeSearchQuery});
+    let data = await client.request(countQuery, {completeSearchQuery: search});
     console.log(data);
-    const {repositoryCount} = data.search;
-    console.log(`Results: ${repositoryCount}`);
-    return repositoryCount;
+    const {count} = data.search;
+    console.log(`Results: ${count}`);
+    return count;
   } catch (error) {
     console.error(error);
   }
-  return null;
 }
 
 
@@ -205,11 +211,11 @@ function writeFiles(json) {
       repo: result.nameWithOwner,
       branch: result.defaultBranchRef.name,
       readme: result.defaultBranchRef.target.repository.object.text,
-      description: result.description ? result.description : "",
+      description: result.description ? result.description : '',
       topics: result.repositoryTopics.edges.map((edge) => edge.node.topic.name),
       createdAt: result.createdAt,
       lastCommitDate: result.defaultBranchRef.target.history.edges[0].node.committedDate,
-      lastReleaseDate: result.latestRelease? result.latestRelease.createdAt: "",
+      lastReleaseDate: result.latestRelease ? result.latestRelease.createdAt : '',
       contributors: result.mentionableUsers.totalCount,
       pulls: result.pullRequests.totalCount,
       commits: result.defaultBranchRef.target.history.totalCount,
@@ -217,81 +223,14 @@ function writeFiles(json) {
       forks: result.forkCount,
       stars: result.stargazerCount,
       diskUsage: result.diskUsage,
-      license: result.licenseInfo ? result.licenseInfo.spdxId : "",
-      language: result.primaryLanguage ? result.primaryLanguage.name : "",
+      license: result.licenseInfo ? result.licenseInfo.spdxId : '',
+      language: result.primaryLanguage ? result.primaryLanguage.name : '',
     };
     return data;
   });
   toJson(fileName, formattedResults);
   toCsv(fileName, formattedResults);
 }
-
-// Set query, count its totals and check rate limits
-const query = `query ($searchQuery: String!, $first: Int, $after: String) {
-  search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
-    repositoryCount
-    nodes {
-      ... on Repository {
-        nameWithOwner
-        description
-        defaultBranchRef {
-          name
-        }
-        createdAt
-        defaultBranchRef {
-          name
-          target {
-            repository {
-              object(expression: "master:README.md") {
-                ... on Blob {
-                  text
-                }
-              }
-            }
-            ... on Blob {
-              text
-            }
-            ... on Commit {
-              history(first: 1) {
-                totalCount
-                edges {
-                  node {
-                    committedDate
-                  }
-                }
-              }
-            }
-          }
-        }
-        latestRelease {
-          createdAt
-        }
-        stargazerCount
-        forkCount
-        pullRequests {
-          totalCount
-        }
-        diskUsage
-        licenseInfo {
-          spdxId
-        }
-        repositoryTopics(first: 10) {
-          edges {
-            node {
-              topic {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}`;
 
 const countQuery = `query ($completeSearchQuery: String!) {
   search(query: $completeSearchQuery, type: REPOSITORY, first: 1) {
@@ -302,11 +241,12 @@ const countQuery = `query ($completeSearchQuery: String!) {
 const compiled = `${searchQuery} ${dateType}:${startDate}..${endDate}`;
 console.log('Compiled search query:', compiled);
 
-// Run and write the extraction
+/**
+ * Entry point.
+ */
 fetchAllResults()
   .then((data) => {
     writeFiles(data);
-    //writeJsonFile(data);
     console.log(`Fetched ${data.length} results.`);
   })
   .catch((error) => console.error(error));

@@ -10,4 +10,5 @@ itest/
 CITATION.cff
 renovate.json
 .rultor.yml
+.0pdd.yml
 .pdd

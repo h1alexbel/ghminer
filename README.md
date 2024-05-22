@@ -27,7 +27,7 @@ productivity.
 First, install it from [npm](https://www.npmjs.com/package/ghminer) like that:
 
 ```bash
-npm install ghminer
+npm install -g ghminer
 ```
 
 then, execute:

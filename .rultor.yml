@@ -40,8 +40,6 @@ release:
   script: |
     [[ "${tag}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit -1
     sed -i "s/0\.0\.0/${tag}/" package.json
-    sed -i "s/0\.0\.0/${tag}/" src/version.js
-    sed -i "s/0000-00-00/$(date +%Y-%m-%d)/" src/version.js
     npm test
     git commit -am "set version to ${tag}"
     chmod 600 ../npmrc

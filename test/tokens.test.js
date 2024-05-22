@@ -26,9 +26,18 @@ const tokens = require('../src/tokens.js');
 
 describe('Test case for tokens.js', function() {
   it('fetches one token from file', function() {
-    const fetched = tokens("test/resources/one");
+    const fetched = tokens('test/resources/one');
     const expected = 'justOneToken';
     assert.equal(
+      fetched,
+      expected,
+      `fetched tokens ${fetched} don't match with expected ${expected}`
+    )
+  });
+  it('fetches a few tokens from file', function() {
+    const fetched = tokens('test/resources/tokens.txt');
+    const expected = ['theFirstToken', 'theSecondToken', 'someOtherToken'];
+    assert.deepEqual(
       fetched,
       expected,
       `fetched tokens ${fetched} don't match with expected ${expected}`

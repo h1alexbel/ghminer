@@ -28,7 +28,9 @@ const assert = require('assert');
 describe('Test case for to-json.js', () => {
   afterEach(
     () => {
-      fs.unlinkSync('test.json');
+      if (fs.existsSync('test.json')) {
+        fs.unlinkSync('test.json');
+      }
     }
   );
   it('creates .json file and writes results as JSON', function() {

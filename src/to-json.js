@@ -25,12 +25,19 @@ fs = require('fs');
 
 /**
  * Flush results to JSON file.
- * @param {String} filename JSON file name
+ * @param {String} file JSON file name
  * @param {String} results Results to flush
  */
-function toJson(filename, results) {
-  fs.writeFile(`${filename}.json`, JSON.stringify(results, null, 2));
-  console.log(`Results saved into ${filename}.json`);
+function toJson(file, results) {
+  fs.writeFile(
+    `${file}.json`,
+    JSON.stringify(results, null, 2), function(err) {
+      if (err) {
+        throw err;
+      }
+      console.log(`${file}.json file saved`);
+    }
+  );
 }
 
 module.exports = toJson;

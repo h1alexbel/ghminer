@@ -21,23 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-fs = require('fs');
+const assert = require('assert');
+const tokens = require('../src/tokens.js');
 
-/**
- * Flush results to JSON file.
- * @param {String} file JSON file name
- * @param {String} results Results to flush
- */
-function toJson(file, results) {
-  fs.writeFile(
-    `${file}.json`,
-    JSON.stringify(results, null, 2), function(err) {
-      if (err) {
-        throw err;
-      }
-      console.log(`${file}.json file saved`);
-    }
-  );
-}
-
-module.exports = toJson;
+describe('Test case for tokens.js', function() {
+  it('fetches one token from file', function() {
+    const fetched = tokens('test/resources/one.txt');
+    const expected = 'justOneToken';
+    assert.equal(
+      fetched,
+      expected,
+      `fetched tokens ${fetched} don't match with expected ${expected}`
+    )
+  });
+  it('fetches a few tokens from file', function() {
+    const fetched = tokens('test/resources/tokens.txt');
+    const expected = ['theFirstToken', 'theSecondToken', 'someOtherToken'];
+    assert.deepEqual(
+      fetched,
+      expected,
+      `fetched tokens ${fetched} don't match with expected ${expected}`
+    )
+  });
+});

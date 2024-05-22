@@ -31,19 +31,19 @@ const graph = `query ($searchQuery: String!, $first: Int, $after: String) {
         defaultBranchRef {
           name
         }
+        primaryLanguage {
+          name
+        }
         createdAt
         defaultBranchRef {
           name
           target {
             repository {
-              object(expression: "master:README.md") {
+              object(expression: "HEAD:README.md") {
                 ... on Blob {
                   text
                 }
               }
-            }
-            ... on Blob {
-              text
             }
             ... on Commit {
               history(first: 1) {
@@ -57,6 +57,9 @@ const graph = `query ($searchQuery: String!, $first: Int, $after: String) {
             }
           }
         }
+        mentionableUsers {
+          totalCount
+        }
         latestRelease {
           createdAt
         }
@@ -65,7 +68,9 @@ const graph = `query ($searchQuery: String!, $first: Int, $after: String) {
         pullRequests {
           totalCount
         }
-        diskUsage
+        issues(states: [OPEN]) {
+          totalCount
+        }
         licenseInfo {
           spdxId
         }

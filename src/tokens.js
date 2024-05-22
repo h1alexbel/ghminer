@@ -21,23 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-fs = require('fs');
+const fs = require('fs');
 
 /**
- * Flush results to JSON file.
- * @param {String} file JSON file name
- * @param {String} results Results to flush
+ * Fetch tokens from file where each token is separated by new line.
+ * @param {String} file File
+ * @return {String} Tokens
  */
-function toJson(file, results) {
-  fs.writeFile(
-    `${file}.json`,
-    JSON.stringify(results, null, 2), function(err) {
-      if (err) {
-        throw err;
-      }
-      console.log(`${file}.json file saved`);
-    }
-  );
+function tokens(file) {
+  try {
+    const content = fs.readFileSync(file, 'utf8');
+    return content.split('\n');
+  } catch (error) {
+    console.error(`Error reading tokens file: ${error.message}`);
+    process.exit(1);
+  }
 }
 
-module.exports = toJson;
+module.exports = tokens;

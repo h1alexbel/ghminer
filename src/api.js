@@ -21,23 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-fs = require('fs');
-
 /**
- * Flush results to JSON file.
- * @param {String} file JSON file name
- * @param {String} results Results to flush
+ * Dynamic import for GraphQLClient, since 'graphql-request' does not support cjs.
+ * @returns {Promise<*>} GraphQLClient API client
  */
-function toJson(file, results) {
-  fs.writeFile(
-    `${file}.json`,
-    JSON.stringify(results, null, 2), function(err) {
-      if (err) {
-        throw err;
-      }
-      console.log(`${file}.json file saved`);
-    }
-  );
+async function api() {
+  const {GraphQLClient} = await import('graphql-request');
+  return GraphQLClient;
 }
 
-module.exports = toJson;
+module.exports = api;

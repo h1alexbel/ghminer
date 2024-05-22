@@ -30,7 +30,6 @@ install: |
   sudo npm install --no-color --global grunt-cli
   npm uninstall --no-color grunt-cli
   npm install --no-color mocha
-  pdd -f /dev/null -v
 merge:
   script: |
     npm test

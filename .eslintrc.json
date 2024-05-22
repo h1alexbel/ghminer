@@ -12,5 +12,8 @@
   },
   "parserOptions": {
     "ecmaVersion": 2019
-  }
+  },
+  "ignorePatterns": [
+    "src/api.js"
+  ]
 }

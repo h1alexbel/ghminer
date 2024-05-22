@@ -22,9 +22,17 @@
  * SOFTWARE.
  */
 const minimist = require('minimist');
-const {GraphQLClient} = require('graphql-request');
-import {toJson} from './to-json.js';
-import {query as rq} from './ratelimit-query.js';
+const toJson = require('./to-json.js');
+const rq = require('./ratelimit-query.js');
+
+/**
+ * Dynamic import for GraphQLClient, since 'graphql-request' does not support cjs.
+ * @returns {Promise<*>} GraphQLClient API client
+ */
+async function api() {
+  const { GraphQLClient } = await import('graphql-request');
+  return GraphQLClient;
+}
 
 const argv = minimist(process.argv.slice(2));
 const fileName = argv.filename || 'results';
@@ -48,6 +56,7 @@ const MAXRESULTS = 1000;
 const TIMEOUT = 0;
 
 let tindex = 0;
+
 function nextToken() {
   const token = tokens[tindex];
   tindex = (tindex + 1) % tokens.length;
@@ -60,6 +69,7 @@ function nextToken() {
 //  Don't forget to remove this puzzle.
 async function fetchResultsBatch(searchQuery, currentDate, cursor = null, results = []) {
   try {
+    const GraphQLClient = await api();
     const client = new GraphQLClient('https://api.github.com/graphql', {
       headers: {
         Authorization: `Bearer ${nextToken()}`
@@ -102,6 +112,7 @@ async function fetchResultsBatch(searchQuery, currentDate, cursor = null, result
 async function resultsInDateRange(completeSearchQuery) {
   console.log('Checking if date range should be split: ' + completeSearchQuery);
   try {
+    const GraphQLClient = await api();
     const client = new GraphQLClient('https://api.github.com/graphql', {
       headers: {
         Authorization: `Bearer ${nextToken()}`
@@ -126,6 +137,7 @@ async function resultsInDateRange(completeSearchQuery) {
 //  forget to remove this puzzle.
 async function fetchAllResults() {
   try {
+    const GraphQLClient = await api();
     const client = new GraphQLClient('https://api.github.com/graphql', {
       headers: {
         Authorization: `Bearer ${nextToken()}`

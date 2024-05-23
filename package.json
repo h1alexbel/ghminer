@@ -1,6 +1,6 @@
 {
   "name": "ghminer",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "description": "Command-line GitHub repository miner that aggregates dataset for your researches",
   "main": "./src/index.js",
   "bin": {
@@ -27,10 +27,10 @@
     "eslint": "9.3.0",
     "eslint-config-google": "0.14.0",
     "grunt": "^1.6.1",
-    "nyc": "^15.1.0",
     "grunt-contrib-clean": "2.0.1",
     "grunt-eslint": "24.3.0",
     "grunt-mocha-cli": "^4.0.0",
-    "mocha": "^10.3.0"
+    "mocha": "^10.4.0",
+    "nyc": "^15.1.0"
   }
 }

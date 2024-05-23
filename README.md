@@ -36,22 +36,18 @@ then, execute:
 ghminer --query "stars:2..100" --start "2005-01-01" --end "2024-01-01" --tokens pats.txt
 ```
 
-For `--query` you provide [GitHub Search API query], start and end date
-of the repository search for `--start` and `--end` respectively.
-For `--tokens` you should provide a text file that contains a number of
-[GitHub PATs] those will be used in order to pass GitHub API rate limits.
-Add as many tokens as needed, considering the amount of data
-(they should be separated by line break).
+## CLI Options
 
-For `--date` you should provide the type of date field to search on, you can
-choose from `created`, `updated` and `pushed`, the default one is `created`.
-
-With `--batchsize` you can provide a batch-size value in the range `10..100`.
-The default value is `10`.
-
-Also, with `--filename` you can provide the name of the file for the output
-repos (CSV and JSON files). The default one is `result`. By default, it would
-create `.csv` file only. If you want JSON too, just pass `--json` option.
+| Option        | Required |                                                                                                        Description                                                                                                         |
+|---------------|----------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `--query`     | ✅        |                                                                                                 [GitHub Search API query]                                                                                                  |
+| `--start`     | ✅        |                                                                       The start date to search the repositories, in [ISO] format; e.g. `2024-01-01`                                                                        |
+| `--end`       | ✅        |                                                                        The end date to search the repositories, in [ISO] format; e.g. `2024-01-01`                                                                         |
+| `--tokens`    | ✅        | Text file name that contains a number of [GitHub PATs]. Those will be used in order to pass GitHub API rate limits. Add as many tokens as needed, considering the amount of data (they should be separated by line break). |
+| `--date`      | ❌        |                                               The type of the date field to search on, you can choose from `created`, `updated` and `pushed`, the default one is `created`.                                                |
+| `--batchsize` | ❌        |                                                                        Request batch-size value in the range `10..100`. The default value is `10`.                                                                         |
+| `--filename`  | ❌        |                                                                The name of the file for the found repos (CSV and JSON files). The default one is `result`.                                                                 |
+| `--json`      | ❌        |                                                                                             Save found repos as JSON file too.                                                                                             |
 
 ## How to contribute
 
@@ -68,6 +64,8 @@ You will need [Node 20+] installed.
 
 [ksegla/GitHubMiner]: https://github.com/ksegla/GitHubMiner
 [GitHub Search API]: https://api.github.com
+[GitHub Search API query]: https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-repositories
+[ISO]: https://en.wikipedia.org/wiki/ISO_8601
 [GitHub GraphQL API]: https://api.github.com/graphql
 [GitHub PAts]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [limitation]: https://stackoverflow.com/questions/37602893/github-search-limit-results

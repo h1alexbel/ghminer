@@ -48,5 +48,5 @@ jobs:
         uses: codecov/codecov-action@v4.3.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: .nyc_output/processinfo/index.json
+          files: .nyc_output/*.json
           fail_ci_if_error: true

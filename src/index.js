@@ -131,11 +131,11 @@ async function fetchResultsBatch(
 //  remove this puzzle.
 /**
  * Range results using dates.
- * @param {String} search Search query
+ * @param {String} completeSearchQuery Search query
  * @return {Promise<*>} Ranged results
  */
-async function resultsInDateRange(search) {
-  console.log('Checking if date range should be split: ' + search);
+async function resultsInDateRange(completeSearchQuery) {
+  console.log('Checking if date range should be split: ' + completeSearchQuery);
   try {
     const GraphQLClient = await api();
     const client = new GraphQLClient('https://api.github.com/graphql', {
@@ -143,11 +143,11 @@ async function resultsInDateRange(search) {
         Authorization: `Bearer ${nextToken()}`
       }
     });
-    const data = await client.request(countQuery, {completeSearchQuery: search});
+    const data = await client.request(countQuery, {completeSearchQuery});
     console.log(data);
-    const {count} = data.search;
-    console.log(`Results: ${count}`);
-    return count;
+    const {repositoryCount} = data.search;
+    console.log(`Results: ${repositoryCount}`);
+    return repositoryCount;
   } catch (error) {
     console.error(error);
   }
@@ -236,7 +236,7 @@ function writeFiles(json) {
     const data = {
       repo: result.nameWithOwner,
       branch: result.defaultBranchRef.name,
-      readme: result.defaultBranchRef.target.repository.object.text,
+      readme: result.defaultBranchRef.target.repository.object? result.defaultBranchRef.target.repository.object.text : '',
       description: result.description ? result.description : '',
       topics: result.repositoryTopics.edges.map((edge) => edge.node.topic.name),
       createdAt: result.createdAt,

@@ -36,6 +36,14 @@ then, execute:
 ghminer --query "stars:2..100" --start "2005-01-01" --end "2024-01-01" --tokens pats.txt
 ```
 
+## CLI Options
+
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |
+
 For `--query` you provide [GitHub Search API query], start and end date
 of the repository search for `--start` and `--end` respectively.
 For `--tokens` you should provide a text file that contains a number of

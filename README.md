@@ -38,7 +38,7 @@ ghminer --query "stars:2..100" --start "2005-01-01" --end "2024-01-01" --tokens 
 ```
 
 After it will be done, you should have `result.csv` file with all GitHub
-repositories those were created in the provided date range. 
+repositories those were created in the provided date range.
 
 ## CLI Options
 

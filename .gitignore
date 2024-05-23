@@ -15,4 +15,4 @@ pipeline/
 .classpath
 .recommenders
 .factorypath
-pyvenv.cfg
+.nyc_output/

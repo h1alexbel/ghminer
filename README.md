@@ -6,6 +6,7 @@
 
 [![test](https://github.com/h1alexbel/ghminer/actions/workflows/test.yml/badge.svg)](https://github.com/h1alexbel/ghminer/actions/workflows/test.yml)
 ![NPM Version](https://img.shields.io/npm/v/ghminer)
+[![codecov](https://codecov.io/gh/h1alexbel/ghminer/graph/badge.svg?token=RraKKKENlR)](https://codecov.io/gh/h1alexbel/ghminer)
 [![PDD status](http://www.0pdd.com/svg?name=h1alexbel/ghminer)](http://www.0pdd.com/p?name=h1alexbel/ghminer)
 [![Hits-of-Code](https://hitsofcode.com/github/h1alexbel/ghminer)](https://hitsofcode.com/view/github/h1alexbel/ghminer)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/h1alexbel/ghminer/blob/master/LICENSE.txt)
@@ -35,6 +36,9 @@ then, execute:
 ```bash
 ghminer --query "stars:2..100" --start "2005-01-01" --end "2024-01-01" --tokens pats.txt
 ```
+
+After it will be done, you should have `result.csv` file with all GitHub
+repositories those were created in the provided date range.
 
 ## CLI Options
 

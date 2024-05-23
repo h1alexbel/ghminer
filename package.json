@@ -14,7 +14,8 @@
   "author": "h1alexbel",
   "license": "MIT",
   "scripts": {
-    "test": "grunt --no-color"
+    "test": "grunt --no-color",
+    "cov": "nyc --all --include src/ npm test"
   },
   "dependencies": {
     "csv-writer": "^1.6.0",
@@ -26,6 +27,7 @@
     "eslint": "8.45.0",
     "eslint-config-google": "0.14.0",
     "grunt": "^1.6.1",
+    "nyc": "^15.1.0",
     "grunt-contrib-clean": "2.0.1",
     "grunt-eslint": "24.3.0",
     "grunt-mocha-cli": "^4.0.0",

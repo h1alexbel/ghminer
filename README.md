@@ -68,7 +68,7 @@ You will need [Node 20+] installed.
 
 [ksegla/GitHubMiner]: https://github.com/ksegla/GitHubMiner
 [GitHub Search API]: https://api.github.com
-[GitHub Search API query]: https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-repositories
+[GitHub Search API query]: https://docs.github.com/en/search-github/searching-on-github/searching-for-repositories
 [ISO]: https://en.wikipedia.org/wiki/ISO_8601
 [GitHub GraphQL API]: https://api.github.com/graphql
 [GitHub PAts]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens

@@ -15,6 +15,9 @@ ghminer is a command-line dataset miner, that aggregates set of public GitHub
 repositories from [GitHub GraphQL API] and flushes the result into CSV and JSON
 files. This tool is based on [ksegla/GitHubMiner] prototype.
 
+Read [this][blogpost] blog post about `ghminer`, as a dataset miner from GitHub
+to your researches.
+
 **Motivation**. For our researches we require reasonably big datasets in order
 to properly analyze GitHub repositories and their metrics. To do so, we need
 aggregate them somehow. Default [GitHub Search API] does not help much, since
@@ -74,3 +77,4 @@ You will need [Node 20+] installed.
 [GitHub PAts]: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 [limitation]: https://stackoverflow.com/questions/37602893/github-search-limit-results
 [Node 20+]: https://nodejs.org/en/download/package-manager
+[blogpost]: https://h1alexbel.github.io/2024/05/24/ghminer.html

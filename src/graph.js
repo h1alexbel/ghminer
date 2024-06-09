@@ -63,6 +63,14 @@ const graph = `query ($searchQuery: String!, $first: Int, $after: String) {
         latestRelease {
           createdAt
         }
+        releases(first:1) {
+          edges {
+            node {
+              id
+            }
+          }
+          totalCount
+        }
         stargazerCount
         forkCount
         pullRequests {

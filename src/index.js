@@ -242,6 +242,7 @@ function writeFiles(json) {
       createdAt: result.createdAt,
       lastCommitDate: result.defaultBranchRef.target.history.edges[0].node.committedDate,
       lastReleaseDate: result.latestRelease ? result.latestRelease.createdAt : '',
+      releases: result.releases.totalCount,
       contributors: result.mentionableUsers.totalCount,
       pulls: result.pullRequests.totalCount,
       commits: result.defaultBranchRef.target.history.totalCount,

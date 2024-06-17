@@ -249,7 +249,8 @@ function writeFiles(json) {
       issues: result.issues.totalCount,
       forks: result.forkCount,
       stars: result.stargazerCount,
-      diskUsage: result.diskUsage,
+      branches: result.refs.totalCount,
+      workflows: result.object ? result.object.entries.length: 0,
       license: result.licenseInfo ? result.licenseInfo.spdxId : '',
       language: result.primaryLanguage ? result.primaryLanguage.name : '',
     };

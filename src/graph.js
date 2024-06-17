@@ -31,10 +31,25 @@ const graph = `query ($searchQuery: String!, $first: Int, $after: String) {
         defaultBranchRef {
           name
         }
+        object(expression: "HEAD:.github/workflows/") {
+          ... on Tree {
+            entries {
+              name
+              object {
+                ... on Blob {
+                  byteSize
+                }
+              }
+            }
+          }
+        }
         primaryLanguage {
           name
         }
         createdAt
+        refs(refPrefix: "refs/heads/") {
+          totalCount
+        }
         defaultBranchRef {
           name
           target {

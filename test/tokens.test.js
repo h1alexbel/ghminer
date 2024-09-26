@@ -43,7 +43,7 @@ describe('Test case for tokens.js', function() {
       `parsed tokens ${fetched} don't match with expected ${expected}`
     )
   });
-  it('fetches one token with one empty line', function () {
+  it('fetches one token with one empty line', function() {
     const parsed = tokens('test/resources/one-empty.txt');
     const expected = ['aaa'];
     assert.deepEqual(

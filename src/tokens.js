@@ -31,7 +31,7 @@ const fs = require('fs');
 function tokens(file) {
   try {
     const content = fs.readFileSync(file, 'utf8');
-    return content.split('\n').filter((c) => c !== undefined && c !== "");
+    return content.split('\n').filter((c) => c !== undefined && c !== '');
   } catch (error) {
     console.error(`Error reading tokens file: ${error.message}`);
     process.exit(1);

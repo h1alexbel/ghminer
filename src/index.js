@@ -31,6 +31,7 @@ const path = require('path');
 const filed = require('./tokens.js');
 const query = require('./graph.js');
 const pkg = require('../package.json');
+let fs = require('fs');
 
 console.log(`Running ghminer@${pkg.version}`);
 const argv = minimist(process.argv.slice(2));
@@ -42,6 +43,7 @@ const endDate = argv.end || now;
 const dateType = argv.date || 'created';
 const print = argv.json || false;
 const gpath = argv.graphql || "ghminer.graphql";
+const schema = argv.schema || "ghminer.json";
 
 let tokens;
 if (argv.tokens) {
@@ -223,38 +225,18 @@ async function fetchAllResults() {
   }
 }
 
-// @todo #1:45min Add support for dynamic field mapping.
-//  Let's add support for dynamic field mapping, user will define his own
-//  mapping in `.yml` file, we will parse that and apply it when writing
-//  results to the files. e.g.: name: result.nameWithOwner, etc. In this
-//  case `result` should be bindable only in that `.yml` config.
 /**
  * Write results to files
  * @param {Object} json Json objects
  */
 function writeFiles(json) {
+  let format = JSON.parse(fs.readFileSync(schema, "utf-8"));
   const formattedResults = json.map((result) => {
-    const data = {
-      repo: result.nameWithOwner,
-      branch: result.defaultBranchRef.name,
-      readme: result.defaultBranchRef.target.repository.object? result.defaultBranchRef.target.repository.object.text : '',
-      description: result.description ? result.description : '',
-      topics: result.repositoryTopics.edges.map((edge) => edge.node.topic.name),
-      createdAt: result.createdAt,
-      lastCommitDate: result.defaultBranchRef.target.history.edges[0].node.committedDate,
-      lastReleaseDate: result.latestRelease ? result.latestRelease.createdAt : '',
-      releases: result.releases.totalCount,
-      contributors: result.mentionableUsers.totalCount,
-      pulls: result.pullRequests.totalCount,
-      commits: result.defaultBranchRef.target.history.totalCount,
-      issues: result.issues.totalCount,
-      forks: result.forkCount,
-      stars: result.stargazerCount,
-      branches: result.refs.totalCount,
-      workflows: result.object ? result.object.entries.length: 0,
-      license: result.licenseInfo ? result.licenseInfo.spdxId : '',
-      language: result.primaryLanguage ? result.primaryLanguage.name : '',
-    };
+    const data = {};
+    for (const [key, path] of Object.entries(format)) {
+      const value = nestedProp(result, path);
+      data[key] = value !== null && value !== undefined ? value : '';
+    }
     return data;
   });
   toCsv(fileName, formattedResults);
@@ -262,6 +244,16 @@ function writeFiles(json) {
     toJson(fileName, formattedResults);
   }
 }
+
+const nestedProp = (obj, path) => {
+  return path.split('.').reduce((acc, key) => {
+    if (key.endsWith('[]')) {
+      const akey = key.slice(0, -2);
+      return acc && Array.isArray(acc[akey]) ? acc[akey].map(item => item.node) : [];
+    }
+    return acc && acc[key] !== undefined ? acc[key] : null;
+  }, obj);
+};
 
 const countQuery = `query ($completeSearchQuery: String!) {
   search(query: $completeSearchQuery, type: REPOSITORY, first: 1) {

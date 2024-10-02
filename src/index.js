@@ -41,6 +41,7 @@ const startDate = argv.start || '2008-01-01';
 const endDate = argv.end || now;
 const dateType = argv.date || 'created';
 const print = argv.json || false;
+const gpath = argv.graphql || "ghminer.graphql";
 
 let tokens;
 if (argv.tokens) {
@@ -96,7 +97,7 @@ async function fetchResultsBatch(
         Authorization: `Bearer ${nextToken()}`
       }
     });
-    const data = await client.request(query, {
+    const data = await client.request(query(gpath), {
       searchQuery,
       first: batchsize,
       after: cursor

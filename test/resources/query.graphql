@@ -1,0 +1,1 @@
+query ($searchQuery: String!, $first: Int, $after: String) {}

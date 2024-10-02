@@ -21,10 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const assert = require('assert');
+const graph = require('../src/graph');
 
-const fs = require('fs');
-const graph = (path) => {
-  return fs.readFileSync(path, "utf-8");
-};
-
-module.exports = graph;
+describe('Test case for graph.js', function() {
+  it('reads GraphQL query from file', function() {
+    const query = graph(
+      'test/resources/query.graphql'
+    );
+    const expected = 'query ($searchQuery: String!, $first: Int, $after: String) {}\n';
+    assert.equal(
+      query,
+      expected,
+      `found query ${query} does not match with expected ${expected}`
+    );
+  });
+});

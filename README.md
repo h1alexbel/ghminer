@@ -48,6 +48,7 @@ repositories those were created in the provided date range.
 | Option        | Required |                                                                                                        Description                                                                                                         |
 |---------------|----------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | `--query`     | ✅        |                                                                                                 [GitHub Search API query]                                                                                                  |
+| `--graphql`   | ✅        |                                                                              Path to  GitHub API GraphQL query, default is `ghminer.graphql`                                                                               |
 | `--start`     | ✅        |                                                                       The start date to search the repositories, in [ISO] format; e.g. `2024-01-01`                                                                        |
 | `--end`       | ✅        |                                                                        The end date to search the repositories, in [ISO] format; e.g. `2024-01-01`                                                                         |
 | `--tokens`    | ✅        | Text file name that contains a number of [GitHub PATs]. Those will be used in order to pass GitHub API rate limits. Add as many tokens as needed, considering the amount of data (they should be separated by line break). |
@@ -55,6 +56,30 @@ repositories those were created in the provided date range.
 | `--batchsize` | ❌        |                                                                        Request batch-size value in the range `10..100`. The default value is `10`.                                                                         |
 | `--filename`  | ❌        |                                                                The name of the file for the found repos (CSV and JSON files). The default one is `result`.                                                                 |
 | `--json`      | ❌        |                                                                                             Save found repos as JSON file too.                                                                                             |
+
+### GraphQL Query
+
+Your query, provided in `--graphql` can have all
+[GitHub supported fields][Gh Explorer] you want. However, to keep this query
+running to collect all possible repositories, ghminer requires you to have
+the following structure:
+
+* `search` with `$searchQuery`, `$first`, `$after` attributes.
+* `pageInfo` with `endCursor`, `hasNextPage` attributes.
+
+Here is an example:
+
+```graphql
+query ($searchQuery: String!, $first: Int, $after: String) {
+  search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
+    repositoryCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+```
 
 ## How to contribute
 
@@ -78,3 +103,4 @@ You will need [Node 20+] installed.
 [limitation]: https://stackoverflow.com/questions/37602893/github-search-limit-results
 [Node 20+]: https://nodejs.org/en/download/package-manager
 [blogpost]: https://h1alexbel.github.io/2024/05/24/ghminer.html
+[Gh Explorer]: https://docs.github.com/en/graphql/overview/explorer

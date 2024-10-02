@@ -66,6 +66,7 @@ the following structure:
 
 * `search` with `$searchQuery`, `$first`, `$after` attributes.
 * `pageInfo` with `endCursor`, `hasNextPage` attributes.
+* `repositoryCount` field.
 
 Here is an example:
 
@@ -73,6 +74,7 @@ Here is an example:
 query ($searchQuery: String!, $first: Int, $after: String) {
   search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
     repositoryCount
+    ...
     pageInfo {
       endCursor
       hasNextPage

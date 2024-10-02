@@ -78,4 +78,43 @@ describe('Test case for nested-prop.js', function () {
       `parsed ${prop} does not match with expected ${expected}`
     );
   });
+  it('returns array of nested props', function () {
+    const obj = {
+      repositoryTopics: {
+        edges: [
+          {
+            node: {
+              topic: {
+                name: "java"
+              }
+            }
+          },
+          {
+            node: {
+              topic: {
+                name: "jvm"
+              }
+            }
+          },
+          {
+            node: {
+              topic: {
+                name: "compilers"
+              }
+            }
+          }
+        ]
+      }
+    };
+    const prop = nested(
+      obj,
+      "repositoryTopics.edges[].node.topic.name"
+    );
+    const expected = 'java,jvm,compilers';
+    assert.equal(
+      prop,
+      expected,
+      `parsed ${prop} does not match with expected ${expected}`
+    );
+  });
 });

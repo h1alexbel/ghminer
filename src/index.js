@@ -32,6 +32,7 @@ const filed = require('./tokens.js');
 const query = require('./graph.js');
 const pkg = require('../package.json');
 let fs = require('fs');
+const nestedProp = require("./nested-prop.js");
 
 console.log(`Running ghminer@${pkg.version}`);
 const argv = minimist(process.argv.slice(2));
@@ -244,16 +245,6 @@ function writeFiles(json) {
     toJson(fileName, formattedResults);
   }
 }
-
-const nestedProp = (obj, path) => {
-  return path.split('.').reduce((acc, key) => {
-    if (key.endsWith('[]')) {
-      const akey = key.slice(0, -2);
-      return acc && Array.isArray(acc[akey]) ? acc[akey].map(item => item.node) : [];
-    }
-    return acc && acc[key] !== undefined ? acc[key] : null;
-  }, obj);
-};
 
 const countQuery = `query ($completeSearchQuery: String!) {
   search(query: $completeSearchQuery, type: REPOSITORY, first: 1) {

@@ -31,8 +31,8 @@ const path = require('path');
 const filed = require('./tokens.js');
 const query = require('./graph.js');
 const pkg = require('../package.json');
-let fs = require('fs');
-const nestedProp = require("./nested-prop.js");
+const fs = require('fs');
+const nestedProp = require('./nested-prop.js');
 
 console.log(`Running ghminer@${pkg.version}`);
 const argv = minimist(process.argv.slice(2));
@@ -43,8 +43,8 @@ const startDate = argv.start || '2008-01-01';
 const endDate = argv.end || now;
 const dateType = argv.date || 'created';
 const print = argv.json || false;
-const gpath = argv.graphql || "ghminer.graphql";
-const schema = argv.schema || "ghminer.json";
+const gpath = argv.graphql || 'ghminer.graphql';
+const schema = argv.schema || 'ghminer.json';
 
 let tokens;
 if (argv.tokens) {
@@ -231,7 +231,7 @@ async function fetchAllResults() {
  * @param {Object} json Json objects
  */
 function writeFiles(json) {
-  let format = JSON.parse(fs.readFileSync(schema, "utf-8"));
+  const format = JSON.parse(fs.readFileSync(schema, 'utf-8'));
   const formattedResults = json.map((result) => {
     const data = {};
     for (const [key, path] of Object.entries(format)) {

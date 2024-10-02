@@ -24,7 +24,7 @@
 
 const fs = require('fs');
 const graph = (path) => {
-  return fs.readFileSync(path, "utf-8");
+  return fs.readFileSync(path, 'utf-8');
 };
 
 module.exports = graph;

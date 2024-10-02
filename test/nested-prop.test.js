@@ -24,12 +24,12 @@
 const assert = require('assert');
 const nested = require('../src/nested-prop');
 
-describe('Test case for nested-prop.js', function () {
-  it('returns prop', function () {
+describe('Test case for nested-prop.js', function() {
+  it('returns prop', function() {
     const obj = {
-      test: "aaa"
+      test: 'aaa'
     };
-    const prop = nested(obj, "test")
+    const prop = nested(obj, 'test')
     const expected = 'aaa';
     assert.equal(
       prop,
@@ -37,13 +37,13 @@ describe('Test case for nested-prop.js', function () {
       `parsed ${prop} does not match with expected ${expected}`
     );
   });
-  it('returns nested prop', function () {
+  it('returns nested prop', function() {
     const obj = {
       test: {
-        aaa: "bbb"
+        aaa: 'bbb'
       }
     };
-    const prop = nested(obj, "test.aaa")
+    const prop = nested(obj, 'test.aaa')
     const expected = 'bbb';
     assert.equal(
       prop,
@@ -51,7 +51,7 @@ describe('Test case for nested-prop.js', function () {
       `parsed ${prop} does not match with expected ${expected}`
     );
   });
-  it('returns first nested prop from array', function () {
+  it('returns first nested prop from array', function() {
     const obj = {
       defaultBranchRef: {
         target: {
@@ -59,7 +59,7 @@ describe('Test case for nested-prop.js', function () {
             edges: [
               {
                 node: {
-                  committedDate: "2024-10-01"
+                  committedDate: '2024-10-01'
                 }
               }
             ]
@@ -69,7 +69,7 @@ describe('Test case for nested-prop.js', function () {
     };
     const prop = nested(
       obj,
-      "defaultBranchRef.target.history.edges[0].node.committedDate"
+      'defaultBranchRef.target.history.edges[0].node.committedDate'
     );
     const expected = '2024-10-01';
     assert.equal(
@@ -78,28 +78,28 @@ describe('Test case for nested-prop.js', function () {
       `parsed ${prop} does not match with expected ${expected}`
     );
   });
-  it('returns array of nested props', function () {
+  it('returns array of nested props', function() {
     const obj = {
       repositoryTopics: {
         edges: [
           {
             node: {
               topic: {
-                name: "java"
+                name: 'java'
               }
             }
           },
           {
             node: {
               topic: {
-                name: "jvm"
+                name: 'jvm'
               }
             }
           },
           {
             node: {
               topic: {
-                name: "compilers"
+                name: 'compilers'
               }
             }
           }
@@ -108,7 +108,7 @@ describe('Test case for nested-prop.js', function () {
     };
     const prop = nested(
       obj,
-      "repositoryTopics.edges[].node.topic.name"
+      'repositoryTopics.edges[].node.topic.name'
     );
     const expected = 'java,jvm,compilers';
     assert.equal(

@@ -35,9 +35,13 @@ const nestedProp = (obj, path) => {
         return acc[arrayKey] && Array.isArray(acc[arrayKey]) ? acc[arrayKey] : [];
       }
     }
-    return Array.isArray(acc)
-      ? acc.map(item => item[key] !== undefined ? item[key] : null)
-      : acc[key] !== undefined ? acc[key] : null;
+    if (Array.isArray(acc)) {
+      return acc.map((item) => item[key] !== undefined ? item[key] : null);
+    } else if (acc[key] !== undefined) {
+      return acc[key];
+    } else {
+      return null;
+    }
   }, obj);
 };
 

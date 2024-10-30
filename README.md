@@ -40,8 +40,150 @@ then, execute:
 ghminer --query "stars:2..100" --start "2005-01-01" --end "2024-01-01" --tokens pats.txt
 ```
 
+Also, you should have these files: `ghminer.graphql` for GraphQL query, and
+`ghminer.json` for parsing the response from GitHub API. In GraphQL query, you
+can have all [GitHub supported fields][Gh Explorer] you want. However, to keep
+this query running to collect all possible repositories, ghminer requires you to
+have the following structure:
+
+* `search` with `$searchQuery`, `$first`, `$after` attributes.
+* `pageInfo` with `endCursor`, `hasNextPage` attributes.
+* `repositoryCount` field.
+
+Here is an example:
+
+```graphql
+query ($searchQuery: String!, $first: Int, $after: String) {
+    search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
+        repositoryCount
+        nodes {
+            ... on Repository {
+                nameWithOwner
+                defaultBranchRef {
+                    name
+                }
+                licenseInfo {
+                    spdxId
+                }
+            }
+        }
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+    }
+}
+```
+
+and `ghminer.json`:
+
+```json
+{
+  "repo": "nameWithOwner",
+  "branch": "defaultBranchRef.name",
+  "license": "licence.spdxId"
+}
+```
+
 After it will be done, you should have `result.csv` file with all GitHub
 repositories those were created in the provided date range.
+
+### Bigger example
+
+Consider this as more complicated example, demonstrating how to fetch various
+fields from GitHub repository:
+
+`ghminer.graphql`:
+
+```graphql
+query ($searchQuery: String!, $first: Int, $after: String) {
+    search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
+        repositoryCount
+        nodes {
+            ... on Repository {
+                nameWithOwner
+                description
+                defaultBranchRef {
+                    name
+                }
+                defaultBranchRef {
+                    name
+                    target {
+                        repository {
+                            object(expression: "HEAD:README.md") {
+                                ... on Blob {
+                                    text
+                                }
+                            }
+                        }
+                        ... on Commit {
+                            history(first: 1) {
+                                totalCount
+                                edges {
+                                    node {
+                                        committedDate
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                repositoryTopics(first: 10) {
+                    edges {
+                        node {
+                            topic {
+                                name
+                            }
+                        }
+                    }
+                }
+                issues(states: [OPEN]) {
+                    totalCount
+                }
+                pullRequests {
+                    totalCount
+                }
+                object(expression: "HEAD:.github/workflows/") {
+                    ... on Tree {
+                        entries {
+                            name
+                            object {
+                                ... on Blob {
+                                    byteSize
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+    }
+}
+```
+
+`ghminer.json`:
+
+```json
+{
+  "repo": "nameWithOwner",
+  "description": "description",
+  "branch": "defaultBranchRef.name",
+  "readme": "defaultBranchRef.target.repository.object.text",
+  "topics": "repositoryTopics.edges[].node.topic.name",
+  "issues": "issues.totalCount",
+  "pulls": "pullRequests.totalCount",
+  "commits": "defaultBranchRef.target.history.totalCount",
+  "lastCommitDate": "defaultBranchRef.target.history.edges[0].node.committedDate",
+  "workflows": "object.entries.length"
+}
+```
+
+Also, check [this repo][sr-detection], where ghminer is used to collect
+Java repositories from GitHub for research experiment.
 
 ## CLI Options
 
@@ -57,52 +199,6 @@ repositories those were created in the provided date range.
 | `--batchsize` | ❌        |                                                                        Request batch-size value in the range `10..100`. The default value is `10`.                                                                         |
 | `--filename`  | ❌        |                                                                The name of the file for the found repos (CSV and JSON files). The default one is `result`.                                                                 |
 | `--json`      | ❌        |                                                                                             Save found repos as JSON file too.                                                                                             |
-
-### GraphQL Query
-
-Your query, provided in `--graphql` can have all
-[GitHub supported fields][Gh Explorer] you want. However, to keep this query
-running to collect all possible repositories, ghminer requires you to have
-the following structure:
-
-* `search` with `$searchQuery`, `$first`, `$after` attributes.
-* `pageInfo` with `endCursor`, `hasNextPage` attributes.
-* `repositoryCount` field.
-
-Here is an example:
-
-```graphql
-query ($searchQuery: String!, $first: Int, $after: String) {
-  search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
-    repositoryCount
-    ...
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-  }
-}
-```
-
-### Parsing Schema
-
-To parse response generated by [GraphQL Query](#graphql-query), you should
-provide the parsing schema. This schema should have all desired metadata field
-names as keys and path to the data in response as values.
-
-For instance:
-
-```json
-{
-  "repo": "nameWithOwner",
-  "branch": "defaultBranchRef.name",
-  "readme": "defaultBranchRef.target.repository.object.text",
-  "topics": "repositoryTopics.edges[].node.topic.name",
-  "lastCommitDate": "defaultBranchRef.target.history.edges[0].node.committedDate",
-  "commits": "defaultBranchRef.target.history.totalCount",
-  "workflows": "object.entries.length"
-}
-```
 
 ## How to contribute
 
@@ -127,3 +223,4 @@ You will need [Node 20+] installed.
 [Node 20+]: https://nodejs.org/en/download/package-manager
 [blogpost]: https://h1alexbel.github.io/2024/05/24/ghminer.html
 [Gh Explorer]: https://docs.github.com/en/graphql/overview/explorer
+[sr-detection]: https://github.com/h1alexbel/sr-detection

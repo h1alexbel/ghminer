@@ -7,6 +7,7 @@ mochawesome-report/
 coverage.html
 *.tgz
 itest/
+.github/
 CITATION.cff
 renovate.json
 .rultor.yml

@@ -10,6 +10,7 @@ itest/
 .github/
 CITATION.cff
 renovate.json
+.gitattributes
 .rultor.yml
 .0pdd.yml
 .pdd

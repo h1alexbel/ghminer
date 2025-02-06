@@ -23,18 +23,12 @@
  */
 const json = require('../src/to-json.js');
 const fs = require('fs');
+const tmp = require('tmp');
 const assert = require('assert');
 
 describe('Test case for to-json.js', () => {
-  afterEach(
-    () => {
-      if (fs.existsSync('test.json')) {
-        fs.unlinkSync('test.json');
-      }
-    }
-  );
   it('creates .json file and writes results as JSON', function() {
-    const file = 'test';
+    const file = tmp.fileSync({postfix: '.json'}).name.replace('.json', '');
     const expected = [
       {
         repo: 'test/test',

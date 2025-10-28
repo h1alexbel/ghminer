@@ -39,7 +39,7 @@ jobs:
       - name: Set up Node 20
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
       - run: npm install
       - run: npm install --force -g grunt-cli
       - run: npm install --force -g nyc

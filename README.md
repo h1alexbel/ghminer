@@ -37,7 +37,8 @@ npm install -g ghminer
 then, execute:
 
 ```bash
-ghminer --query "stars:2..100" --start "2005-01-01" --end "2024-01-01" --tokens pats.txt
+ghminer --query "stars:2..100" --start "2005-01-01" \
+  --end "2024-01-01" --tokens pats.txt
 ```
 
 Also, you should have these files: `ghminer.graphql` for GraphQL query, and
@@ -54,7 +55,12 @@ Here is an example:
 
 ```graphql
 query ($searchQuery: String!, $first: Int, $after: String) {
-    search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
+    search(
+        query: $searchQuery,
+        type: REPOSITORY,
+        first: $first,
+        after: $after
+    ) {
         repositoryCount
         nodes {
             ... on Repository {
@@ -97,7 +103,12 @@ fields from GitHub repository:
 
 ```graphql
 query ($searchQuery: String!, $first: Int, $after: String) {
-    search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
+    search(
+        query: $searchQuery,
+        type: REPOSITORY,
+        first: $first,
+        after: $after
+    ) {
         repositoryCount
         nodes {
             ... on Repository {
@@ -187,18 +198,18 @@ Java repositories from GitHub for research experiment.
 
 ## CLI Options
 
-| Option        | Required |                                                                                                        Description                                                                                                         |
-|---------------|----------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| `--query`     | ✅        |                                                                                                 [GitHub Search API query]                                                                                                  |
-| `--graphql`   | ✅        |                                                                              Path to GitHub API GraphQL query, default is `ghminer.graphql`.                                                                               |
-| `--schema`    | ✅        |                                                                                     Path to parsing schema, default is `ghminer.json`.                                                                                     |
-| `--start`     | ✅        |                                                                       The start date to search the repositories, in [ISO] format; e.g. `2024-01-01`.                                                                       |
-| `--end`       | ✅        |                                                                        The end date to search the repositories, in [ISO] format; e.g. `2024-01-01`.                                                                        |
-| `--tokens`    | ✅        | Text file name that contains a number of [GitHub PATs]. Those will be used in order to pass GitHub API rate limits. Add as many tokens as needed, considering the amount of data (they should be separated by line break). |
-| `--date`      | ❌        |                                               The type of the date field to search on, you can choose from `created`, `updated` and `pushed`, the default one is `created`.                                                |
-| `--batchsize` | ❌        |                                                                        Request batch-size value in the range `10..100`. The default value is `10`.                                                                         |
-| `--filename`  | ❌        |                                                                The name of the file for the found repos (CSV and JSON files). The default one is `result`.                                                                 |
-| `--json`      | ❌        |                                                                                             Save found repos as JSON file too.                                                                                             |
+| Option | Required | Description |
+| --- | --- | --- |
+| `--query` | ✅ | [GitHub Search API query] |
+| `--graphql` | ✅ | Path to GitHub API GraphQL query, default is `ghminer.graphql`. |
+| `--schema` | ✅ | Path to parsing schema, default is `ghminer.json`. |
+| `--start` | ✅ | The start date to search the repositories, in [ISO] format; e.g. `2024-01-01`. |
+| `--end` | ✅ | The end date to search the repositories, in [ISO] format; e.g. `2024-01-01`. |
+| `--tokens` | ✅ | Text file name that contains a number of [GitHub PATs]. Those will be used in order to pass GitHub API rate limits. Add as many tokens as needed, considering the amount of data (they should be separated by line break). |
+| `--date` | ❌ | The date field to search on; `created`, `updated` or `pushed`; default is `created`. |
+| `--batchsize` | ❌ | Request batch-size value in the range `10..100`. The default value is `10`. |
+| `--filename` | ❌ | The name of the file for the found repos (CSV and JSON files). The default one is `result`. |
+| `--json` | ❌ | Save found repos as JSON file too. |
 
 ## How to contribute
 

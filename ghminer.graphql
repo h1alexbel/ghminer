@@ -1,0 +1,81 @@
+# Copyright (c) 2024-2026 Aliaksei Bialiauski
+#
+# SPDX-License-Identifier: MIT
+
+// Copyright (c) 2024-2026 Aliaksei Bialiauski
+//
+// SPDX-License-Identifier: MIT
+
+query (
+  $searchQuery: String!
+  $first: Int
+  $after: String
+) {
+  search(
+    query: $searchQuery
+    type: REPOSITORY
+    first: $first
+    after: $after
+  ) {
+    repositoryCount
+    nodes {
+      ... on Repository {
+        nameWithOwner
+        description
+        defaultBranchRef {
+          name
+          target {
+            repository {
+              object(expression: "HEAD:README.md") {
+                ... on Blob {
+                  text
+                }
+              }
+            }
+            ... on Commit {
+              history(first: 1) {
+                totalCount
+                edges {
+                  node {
+                    committedDate
+                  }
+                }
+              }
+            }
+          }
+        }
+        repositoryTopics(first: 10) {
+          edges {
+            node {
+              topic {
+                name
+              }
+            }
+          }
+        }
+        issues(states: [OPEN]) {
+          totalCount
+        }
+        pullRequests {
+          totalCount
+        }
+        object(expression: "HEAD:.github/workflows/") {
+          ... on Tree {
+            entries {
+              name
+              object {
+                ... on Blob {
+                  byteSize
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

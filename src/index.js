@@ -14,7 +14,7 @@ const filed = require('./tokens.js');
 const query = require('./graph.js');
 const pkg = require('../package.json');
 const fs = require('fs');
-const nestedProp = require('./nested-prop.js');
+const flatten = require('./flatten.js');
 
 console.log(`Running ghminer@${pkg.version}`);
 const argv = minimist(process.argv.slice(2));
@@ -22,11 +22,14 @@ const fileName = argv.filename || 'results';
 const batchsize = argv.batchsize || 10;
 const searchQuery = argv.query || '';
 const startDate = argv.start || '2008-01-01';
-const endDate = argv.end || now;
+const endDate = argv.end || new Date().toISOString().slice(0, 10);
 const dateType = argv.date || 'created';
 const print = argv.json || false;
-const gpath = argv.graphql || 'ghminer.graphql';
-const schema = argv.schema || 'ghminer.json';
+const root = path.join(__dirname, '..');
+const gpath = argv.graphql ||
+  path.join(root, 'ghminer.graphql');
+const schema = argv.schema ||
+  path.join(root, 'ghminer.json');
 
 let tokens;
 if (argv.tokens) {
@@ -210,18 +213,11 @@ async function fetchAllResults() {
 
 /**
  * Write results to files
- * @param {Object} json Json objects
+ * @param {Array} responses Responses from GitHub API
  */
-function writeFiles(json) {
+function writeFiles(responses) {
   const format = JSON.parse(fs.readFileSync(schema, 'utf-8'));
-  const formattedResults = json.map((result) => {
-    const data = {};
-    for (const [key, path] of Object.entries(format)) {
-      const value = nestedProp(result, path);
-      data[key] = value !== null && value !== undefined ? value : '';
-    }
-    return data;
-  });
+  const formattedResults = flatten(responses, format);
   toCsv(fileName, formattedResults);
   if (print) {
     toJson(fileName, formattedResults);
@@ -242,7 +238,7 @@ console.log('Compiled search query:', compiled);
  */
 fetchAllResults()
   .then((data) => {
-    writeFiles(data);
-    console.log(`Fetched ${data.length} results.`);
+    writeFiles(Array.isArray(data) ? data : []);
+    console.log(`Fetched ${data ? data.length : 0} responses.`);
   })
   .catch((error) => console.error(error));

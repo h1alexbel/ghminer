@@ -1,0 +1,12 @@
+{
+  "repo": "nameWithOwner",
+  "description": "description",
+  "branch": "defaultBranchRef.name",
+  "readme": "defaultBranchRef.target.repository.object.text",
+  "topics": "repositoryTopics.edges[].node.topic.name",
+  "issues": "issues.totalCount",
+  "pulls": "pullRequests.totalCount",
+  "commits": "defaultBranchRef.target.history.totalCount",
+  "lastCommitDate": "defaultBranchRef.target.history.edges[0].node.committedDate",
+  "workflows": "object.entries.length"
+}

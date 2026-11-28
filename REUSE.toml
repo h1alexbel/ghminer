@@ -6,6 +6,7 @@ version = 1
 [[annotations]]
 path = [
   "README.md",
+  "ghminer.json",
   ".markdownlint.json",
   "src/repos.csv",
   "src/results.csv",

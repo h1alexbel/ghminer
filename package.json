@@ -13,6 +13,11 @@
   ],
   "author": "h1alexbel",
   "license": "MIT",
+  "files": [
+    "src/",
+    "ghminer.graphql",
+    "ghminer.json"
+  ],
   "scripts": {
     "test": "grunt --no-color",
     "cov": "nyc --all --include src/ npm test"

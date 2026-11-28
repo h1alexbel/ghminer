@@ -1,0 +1,21 @@
+{
+  "repo": "nameWithOwner",
+  "branch": "defaultBranchRef.name",
+  "readme": "defaultBranchRef.target.repository.object.text",
+  "description": "description",
+  "topics": "repositoryTopics.edges[].node.topic.name",
+  "createdAt": "createdAt",
+  "lastCommitDate": "defaultBranchRef.target.history.edges[0].node.committedDate",
+  "lastReleaseDate": "latestRelease.createdAt",
+  "releases": "releases.totalCount",
+  "contributors": "mentionableUsers.totalCount",
+  "pulls": "pullRequests.totalCount",
+  "commits": "defaultBranchRef.target.history.totalCount",
+  "issues": "issues.totalCount",
+  "forks": "forkCount",
+  "stars": "stargazerCount",
+  "branches": "refs.totalCount",
+  "workflows": "object.entries.length",
+  "license": "licenseInfo.spdxId",
+  "language": "primaryLanguage.name"
+}

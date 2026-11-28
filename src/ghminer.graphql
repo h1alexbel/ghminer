@@ -1,0 +1,93 @@
+query ($searchQuery: String!, $first: Int, $after: String) {
+  search(query: $searchQuery, type: REPOSITORY, first: $first, after: $after) {
+    repositoryCount
+    nodes {
+      ... on Repository {
+        nameWithOwner
+        description
+        defaultBranchRef {
+          name
+        }
+        object(expression: "HEAD:.github/workflows/") {
+          ... on Tree {
+            entries {
+              name
+              object {
+                ... on Blob {
+                  byteSize
+                }
+              }
+            }
+          }
+        }
+        primaryLanguage {
+          name
+        }
+        createdAt
+        refs(refPrefix: "refs/heads/") {
+          totalCount
+        }
+        defaultBranchRef {
+          name
+          target {
+            repository {
+              object(expression: "HEAD:README.md") {
+                ... on Blob {
+                  text
+                }
+              }
+            }
+            ... on Commit {
+              history(first: 1) {
+                totalCount
+                edges {
+                  node {
+                    committedDate
+                  }
+                }
+              }
+            }
+          }
+        }
+        mentionableUsers {
+          totalCount
+        }
+        latestRelease {
+          createdAt
+        }
+        releases(first:1) {
+          edges {
+            node {
+              id
+            }
+          }
+          totalCount
+        }
+        stargazerCount
+        forkCount
+        pullRequests {
+          totalCount
+        }
+        issues(states: [OPEN]) {
+          totalCount
+        }
+        licenseInfo {
+          spdxId
+        }
+        repositoryTopics(first: 10) {
+          edges {
+            node {
+              topic {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

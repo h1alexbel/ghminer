@@ -1,5 +1,8 @@
+# Copyright (c) 2024-2026 Aliaksei Bialiauski
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Aliaksei Bialiauski
+#
 # SPDX-License-Identifier: MIT
+
 ---
 # yamllint disable rule:line-length
 name: reuse
